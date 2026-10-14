@@ -1,0 +1,22 @@
+[project]
+name = "docintel"
+version = "0.1.0"
+description = "Contract clause extraction from CUAD with an LLM, schema validation and a precision/recall eval harness"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=1.13,<2",
+    "pydantic>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
