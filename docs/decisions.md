@@ -49,3 +49,33 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 | run | split | span P | span R | span F1 | presence acc | cost |
 |---|---|---:|---:|---:|---:|---:|
 | keyword baseline | dev (415) | 27.3 | 24.3 | 25.7 | 80.0 | $0 |
+| keyword baseline | dev sample (20) | 30.5 | 28.4 | 29.4 | 80.8 | $0 |
+| Haiku 5.5, medium effort, prompt v1 | dev sample (20) | 59.0 | 45.6 | 51.4 | 92.5 | $0.003 / contract |
+| Haiku 5.5, medium effort, prompt v2a (+ quoting rules) | dev sample (20) | 81.3 | 87.0 | 84.0 | 91.2 | $0.004 / contract |
+
+## D8. Develop on Haiku 5.5, not Opus 5.5
+
+- The 1-contract smoke test cost $0.062 on Opus vs $0.004 on Haiku, with identical scores (F1 40%, 12/12 presence correct).
+- Prompt iteration runs many times, so it uses Haiku. Opus is run once on the final prompt for the model comparison.
+
+## D9. Prompt v1 findings (Haiku, 20 dev contracts)
+
+- **Boundary errors dominate (44):** the answers are usually right, but the quote extent differs from the labelling convention. Lawyers highlight only the name or date for Parties and the date fields, but whole sentences for clauses. The keyword baseline beats Haiku on Agreement Date (F1 64.5 vs 43.9) only because it quotes just the date.
+- **False alarms (14)** cluster in interpretive fields: Non-Compete 4, Termination for Convenience 3, Effective Date 3. These are understanding errors, not formatting ones.
+- **Low recall on multi-passage fields:** Parties (18.7%; lawyers label each name and each alias) and Cap on Liability (39.1%; often several separate passages).
+- Validation: 1/20 first attempts contained a quote not in the contract; the retry fixed it.
+- Caveat: 20 contracts is a small sample, and per-field numbers rest on a handful of examples.
+
+## D11. Prompt v2a: quoting rules (ablation step 1)
+
+- One change from v1: rules on how much to quote, matching CUAD's highlighting conventions (names and dates only for parties/dates; full sentences, every passage, for clauses).
+- F1 51.4 → 84.0. Biggest gains: Parties 25.9 → 92.7, Agreement Date 43.9 → 95.2, Document Name 87.8 → 97.6. Boundary errors fell from 44 to 7.
+- Most of v1's "errors" were therefore labelling-convention mismatches, not misunderstanding.
+- False alarms rose slightly (14 → 17), and Non-Compete precision is 35%. All 6 Non-Compete false alarms were neighbouring CUAD categories the model doesn't know are separate: No-Solicit of Customers, No-Solicit of Employees, Exclusivity. That is the target for v2b (definitions with explicit exclusions).
+
+## D10. Self-hosting: a focused comparison here, a deep dive as a separate project
+
+- In this project: one open-source model (~7–14B) served with vLLM on a cloud GPU, run on the same contracts, prompt, validation and eval as Claude. Answers one question: API or self-hosted for this system?
+- Not on the local machine: an RTX 3050 with 4 GB of GPU memory can't hold a 7B+ model plus a long contract's context.
+- Done after the prompt is final, so the GPU runs only once.
+- Deeper serving work (quantization, batching, latency, LoRA fine-tuning) is a separate follow-up project that reuses this eval as its benchmark, so it measures quality, not just speed.

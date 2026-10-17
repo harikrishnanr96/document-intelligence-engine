@@ -52,6 +52,27 @@ def check_grounding(extraction: ContractExtraction, contract_text: str) -> list[
     ]
 
 
+def drop_ungrounded(extraction: ContractExtraction, issues: list[GroundingIssue]) -> ContractExtraction:
+    """Remove quotes that aren't in the contract: never pass on evidence we can't find.
+
+    A field left with no evidence is marked absent, because its answer has no support.
+    """
+    if not issues:
+        return extraction
+    bad = {(i.field, i.quote) for i in issues}
+    updates = {}
+    for key, fx in extraction.items():
+        kept = [q for q in fx.evidence if (key, q) not in bad]
+        if len(kept) == len(fx.evidence):
+            continue
+        if kept:
+            updates[key] = fx.model_copy(update={"evidence": kept})
+        else:
+            updates[key] = fx.model_copy(update={
+                "present": False, "evidence": [], "value": [] if isinstance(fx.value, list) else None})
+    return extraction.model_copy(update=updates)
+
+
 def validate_output(raw_json: str, contract_text: str) -> ValidationReport:
     try:
         extraction = ContractExtraction.model_validate_json(raw_json)
