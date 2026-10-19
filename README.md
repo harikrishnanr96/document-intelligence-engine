@@ -4,7 +4,7 @@
 
 Turns a contract into validated JSON for 12 key clauses (parties, dates, governing law, renewal, termination, assignment, liability cap, non-compete), with a verbatim quote as evidence for every answer. Accuracy is measured with precision and recall against 13,000+ lawyer-highlighted passages from the [CUAD](https://www.atticusprojectai.org/cuad) dataset.
 
-> 🚧 **Work in progress.** Evaluation harness, baseline and LLM extraction are working; prompt engineering is in progress.
+> 🚧 **Work in progress.** Evaluation, extraction and prompt engineering are done and measured (below). Next: the end-to-end workflow, i.e. PDF input, review flags and a review UI. Planned items are listed separately under [Roadmap](#roadmap).
 
 ## Results so far
 
@@ -72,7 +72,7 @@ pytest                               # no dataset or API key needed
 python scripts/run_baseline.py       # scores the keyword baseline on the dev set
 
 # LLM extraction: put ANTHROPIC_API_KEY=... in a .env file first (it is git-ignored)
-python scripts/run_extraction.py --n 20 --prompt v2a   # ~$0.08 on Claude Haiku 5.5
+python scripts/run_extraction.py --n 100 --exclude-sample 20 --prompt v2b   # 80 contracts, ~$0.40 on Claude Haiku 5.5
 ```
 
 ## Roadmap
@@ -81,17 +81,19 @@ python scripts/run_extraction.py --n 20 --prompt v2a   # ~$0.08 on Claude Haiku 
 - [x] Pydantic schema and three-layer validation
 - [x] Eval harness (span precision/recall, presence accuracy, error types) and keyword baseline
 - [x] First LLM extraction (Haiku 5.5, prompt v1: F1 51.4% vs 29.4% keyword baseline on 20 dev contracts, $0.003 / contract)
-- [ ] Prompt and context engineering, with before/after scores per field
-- [ ] Trade-offs on the same contracts and eval:
-  - models: Haiku vs Opus (vs Sonnet), accuracy against cost and latency
-  - API vs self-hosted: one open-source model served with vLLM on a cloud GPU
-  - readers: PDF text layer vs OCR vs vision model on simulated scans
-- [ ] `docintel extract contract.pdf` CLI with an OCR fallback for scanned PDFs
-- [ ] Demo, charts and write-up
+- [x] Prompt and context engineering: v1 → v2a → v2b ablation, confirmed on 80 contracts not used for tuning (F1 42.7 → 78.4)
+- [ ] `docintel extract contract.pdf`: PDF in, validated JSON out, with text-layer and "is this a contract?" checks
+- [ ] Review flags: mark each result auto-accept or needs-review, and measure whether flagged items contain most errors
+- [ ] Batch extraction over a folder into one results table
+- [ ] Review UI: queue of flagged results with evidence highlighted in the contract
+- [ ] One model comparison: Haiku vs a stronger model on the same contracts
+- [ ] Final score on the 95 held-out test contracts, run once
+- [ ] Demo and write-up
 
-## Future work
+## Out of scope (for now)
 
-- **LLM inference engineering (planned follow-up project):** quantization, batching, latency and fine-tuning (LoRA) of a small open-source model, using this project's eval as the quality benchmark. Question: can a small fine-tuned model match the API on these 12 fields?
+- **OCR and vision models.** Every CUAD PDF has a text layer that preserves 99.9% of labelled evidence, so these documents don't need them. Scanned documents would.
+- **Self-hosted models.** Planned as a separate follow-up project on inference engineering (serving, quantization, LoRA fine-tuning) that reuses this eval as its quality benchmark.
 
 ## Data and licence
 
