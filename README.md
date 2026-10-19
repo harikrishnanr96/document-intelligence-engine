@@ -6,16 +6,25 @@ Turns a contract into validated JSON for 12 key clauses (parties, dates, governi
 
 > 🚧 **Work in progress.** Evaluation harness, baseline and LLM extraction are working; prompt engineering is in progress.
 
-## Results so far (20 dev contracts, same sample for every row)
+## Results so far
+
+**80 dev contracts not used for prompt tuning** (the honest dev numbers):
 
 | System | Span precision | Span recall | Span F1 | Presence accuracy | Cost / contract |
 |---|---:|---:|---:|---:|---:|
-| Keyword baseline (no LLM) | 30.5% | 28.4% | 29.4% | 80.8% | $0 |
-| Claude Haiku 5.5, prompt v1 (plain) | 59.0% | 45.6% | 51.4% | 92.5% | $0.003 |
-| Claude Haiku 5.5, prompt v2a (+ quoting rules) | 81.3% | 87.0% | 84.0% | 91.2% | $0.004 |
-| Claude Haiku 5.5, prompt v2b (+ field definitions with exclusions) | 85.3% | 88.1% | 86.7% | 96.2% | $0.004 |
+| Claude Haiku 5.5, prompt v1 (plain) | 52.8% | 35.9% | 42.7% | 91.1% | $0.004 |
+| Claude Haiku 5.5, prompt v2b (final) | 79.9% | 77.1% | **78.4%** | 93.8% | $0.005 |
 
-Run summaries are in [results/](results/). Final numbers will be reported once, on 95 held-out test contracts.
+**Prompt development** on 20 dev contracts, adding one change at a time:
+
+| System | Span F1 |
+|---|---:|
+| Keyword baseline (no LLM) | 29.4% |
+| Prompt v1: plain CUAD definitions | 51.4% |
+| v2a: + quoting rules | 84.0% |
+| v2b: + field definitions with exclusions | 86.7% |
+
+Both prompts score ~8 points lower on the 80 fresh contracts than on the 20 tuning ones, and the v1 → v2b gain holds (+35). So the fresh contracts are harder, and the prompt improvements generalise rather than overfit. Run summaries are in [results/](results/). Final numbers will be reported once, on 95 held-out test contracts.
 
 ## Key findings so far
 

@@ -53,6 +53,8 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 | Haiku 5.5, medium effort, prompt v1 | dev sample (20) | 59.0 | 45.6 | 51.4 | 92.5 | $0.003 / contract |
 | Haiku 5.5, medium effort, prompt v2a (+ quoting rules) | dev sample (20) | 81.3 | 87.0 | 84.0 | 91.2 | $0.004 / contract |
 | Haiku 5.5, medium effort, prompt v2b (+ field definitions) | dev sample (20) | 85.3 | 88.1 | 86.7 | 96.2 | $0.004 / contract |
+| Haiku 5.5, medium effort, prompt v1 | fresh dev (80, not used for tuning) | 52.8 | 35.9 | 42.7 | 91.1 | $0.004 / contract |
+| Haiku 5.5, medium effort, prompt v2b | fresh dev (80, not used for tuning) | 79.9 | 77.1 | 78.4 | 93.8 | $0.005 / contract |
 
 ## D8. Develop on Haiku 5.5, not Opus 5.5
 
@@ -82,6 +84,16 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 - Notice Period 85.7 → 100, Effective Date 66.7 → 75.0, Expiration Date 64.7 → 72.2.
 - Regression: Cap on Liability 72.7 → 68.1. The unmatched quotes are mostly carve-outs ("except for indemnification obligations…"), which CUAD labels as a separate category, Uncapped Liability. One case (Verizon) is arguably a cap the labellers didn't mark. Candidate fix: exclude carve-outs explicitly.
 - Overfitting risk: v1 → v2a → v2b were all judged on the same 20 contracts, and several fields have only 5–10 positive examples there. Next step is to confirm v2b on a larger dev sample before any further tuning.
+
+## D13. Fresh-contract check: gains are real; freeze prompt v2b
+
+- v1 and v2b re-run on 80 dev contracts never used for tuning (`--n 100 --exclude-sample 20`).
+- Both dropped ~8 points versus the tuning set (v1 51.4 → 42.7, v2b 86.7 → 78.4), and the v1 → v2b gain held (+35.3 on tuning, +35.7 fresh). An equal drop for both means the fresh contracts are harder, not that v2b overfit.
+- Honest dev number for v2b: **F1 78.4** (P 79.9, R 77.1, presence accuracy 93.8).
+- Per field: factual fields strong (Document Name 96.3, Governing Law 93.9, Parties 86.9, Agreement Date 83.8). Weakest: Non-Compete 56.7 (recall 54), Effective Date 61.2 (14 boundary errors), Cap on Liability 66.5, Anti-Assignment 68.2.
+- Most common remaining error is `partial_hit` (153): on multi-passage fields the model finds some passages but not all.
+- Validation: 16/80 first attempts (20%) quoted text not in the contract (0/80 under v1; short exact quotes are easier to get slightly wrong). The retry fixed 15; 1 unsupported quote was dropped.
+- Decision: freeze v2b. Further tuning would need studying these 80 contracts' errors, which would use up another fresh check. The weak fields are documented as known limitations.
 
 ## D10. Self-hosting: a focused comparison here, a deep dive as a separate project
 

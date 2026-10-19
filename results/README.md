@@ -13,3 +13,7 @@ Full per-contract outputs stay in `runs/`, which is not committed. Re-running th
 | [Haiku 5.5, prompt v1, 20 dev contracts](20261015-210154-claude-haiku-5-5-medium-v1-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v1` | 51.4 |
 | [Haiku 5.5, prompt v2a, 20 dev contracts](20261016-121534-claude-haiku-5-5-medium-v2a-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v2a` | 84.0 |
 | [Haiku 5.5, prompt v2b, 20 dev contracts](20261019-122341-claude-haiku-5-5-medium-v2b-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v2b` | 86.7 |
+| [Haiku 5.5, prompt v1, 80 fresh dev contracts](20261019-140804-claude-haiku-5-5-medium-v1-dev80/summary.md) | `python scripts/run_extraction.py --n 100 --exclude-sample 20 --prompt v1` | 42.7 |
+| [Haiku 5.5, prompt v2b, 80 fresh dev contracts](20261019-141153-claude-haiku-5-5-medium-v2b-dev80/summary.md) | `python scripts/run_extraction.py --n 100 --exclude-sample 20 --prompt v2b` | 78.4 |
+
+The 20-contract runs were used to tune the prompt; the 80-contract runs were not, so they are the honest dev numbers.
