@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "system": "llm",
+    "model": "claude-haiku-5-5",
+    "effort": "medium",
+    "prompt": "v2b",
+    "split": "dev",
+    "contracts": 20,
+    "api_failures": 0,
+    "cost_usd_total": 0.0827,
+    "cost_usd_per_contract": 0.0041,
+    "seconds_per_contract": 14.9,
+    "validation": {
+      "first_attempt_schema_failures": 0,
+      "first_attempt_with_ungrounded_quotes": 2,
+      "retried": 2,
+      "ungrounded_quotes_dropped_after_retry": 0,
+      "no_valid_output": 0
+    },
+    "served_by": [
+      "claude-haiku-5-5"
+    ]
+  },
+  "summary": {
+    "document_name": {
+      "contracts": 20,
+      "span_precision": 1.0,
+      "span_recall": 0.9523809523809523,
+      "span_f1": 0.975609756097561,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "hit": 19,
+        "partial_hit": 1
+      }
+    },
+    "parties": {
+      "contracts": 20,
+      "span_precision": 0.9425287356321839,
+      "span_recall": 0.9010989010989011,
+      "span_f1": 0.9213483146067416,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "hit": 14,
+        "partial_hit": 6
+      }
+    },
+    "agreement_date": {
+      "contracts": 20,
+      "span_precision": 0.9523809523809523,
+      "span_recall": 1.0,
+      "span_f1": 0.975609756097561,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "hit": 19,
+        "partial_hit": 1
+      }
+    },
+    "effective_date": {
+      "contracts": 20,
+      "span_precision": 0.7058823529411765,
+      "span_recall": 0.8,
+      "span_f1": 0.7500000000000001,
+      "presence_precision": 0.875,
+      "presence_recall": 1.0,
+      "presence_accuracy": 0.9,
+      "outcomes": {
+        "hit": 11,
+        "partial_hit": 1,
+        "boundary": 2,
+        "correct_absent": 4,
+        "false_alarm": 2
+      }
+    },
+    "expiration_date": {
+      "contracts": 20,
+      "span_precision": 0.7647058823529411,
+      "span_recall": 0.6842105263157895,
+      "span_f1": 0.7222222222222222,
+      "presence_precision": 1.0,
+      "presence_recall": 0.9375,
+      "presence_accuracy": 0.95,
+      "outcomes": {
+        "boundary": 3,
+        "hit": 10,
+        "partial_hit": 2,
+        "missed": 1,
+        "correct_absent": 4
+      }
+    },
+    "governing_law": {
+      "contracts": 20,
+      "span_precision": 0.9047619047619048,
+      "span_recall": 1.0,
+      "span_f1": 0.9500000000000001,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "hit": 18,
+        "partial_hit": 1,
+        "correct_absent": 1
+      }
+    },
+    "renewal_term": {
+      "contracts": 20,
+      "span_precision": 0.6666666666666666,
+      "span_recall": 1.0,
+      "span_f1": 0.8,
+      "presence_precision": 0.8,
+      "presence_recall": 1.0,
+      "presence_accuracy": 0.9,
+      "outcomes": {
+        "correct_absent": 10,
+        "false_alarm": 2,
+        "hit": 7,
+        "partial_hit": 1
+      }
+    },
+    "notice_period_to_terminate_renewal": {
+      "contracts": 20,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "correct_absent": 15,
+        "hit": 5
+      }
+    },
+    "termination_for_convenience": {
+      "contracts": 20,
+      "span_precision": 0.6666666666666666,
+      "span_recall": 0.8888888888888888,
+      "span_f1": 0.761904761904762,
+      "presence_precision": 0.625,
+      "presence_recall": 1.0,
+      "presence_accuracy": 0.85,
+      "outcomes": {
+        "hit": 3,
+        "partial_hit": 2,
+        "false_alarm": 3,
+        "correct_absent": 12
+      }
+    },
+    "anti_assignment": {
+      "contracts": 20,
+      "span_precision": 0.8846153846153846,
+      "span_recall": 0.84,
+      "span_f1": 0.8617305976806422,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "hit": 11,
+        "correct_absent": 3,
+        "partial_hit": 6
+      }
+    },
+    "cap_on_liability": {
+      "contracts": 20,
+      "span_precision": 0.6666666666666666,
+      "span_recall": 0.6956521739130435,
+      "span_f1": 0.6808510638297872,
+      "presence_precision": 1.0,
+      "presence_recall": 1.0,
+      "presence_accuracy": 1.0,
+      "outcomes": {
+        "correct_absent": 11,
+        "partial_hit": 6,
+        "hit": 2,
+        "wrong_passage": 1
+      }
+    },
+    "non_compete": {
+      "contracts": 20,
+      "span_precision": 0.6,
+      "span_recall": 1.0,
+      "span_f1": 0.7499999999999999,
+      "presence_precision": 0.75,
+      "presence_recall": 1.0,
+      "presence_accuracy": 0.95,
+      "outcomes": {
+        "correct_absent": 16,
+        "partial_hit": 2,
+        "hit": 1,
+        "false_alarm": 1
+      }
+    },
+    "ALL": {
+      "contracts": 240,
+      "span_precision": 0.8534798534798534,
+      "span_recall": 0.8812260536398467,
+      "span_f1": 0.8671310566895626,
+      "presence_precision": 0.950920245398773,
+      "presence_recall": 0.9935897435897436,
+      "presence_accuracy": 0.9625,
+      "outcomes": {
+        "hit": 120,
+        "boundary": 5,
+        "correct_absent": 76,
+        "partial_hit": 29,
+        "false_alarm": 8,
+        "missed": 1,
+        "wrong_passage": 1
+      }
+    }
+  }
+}

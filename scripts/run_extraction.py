@@ -3,6 +3,7 @@
     python scripts/run_extraction.py --n 20                 # 20 dev contracts, Haiku 5.5, prompt v1
     python scripts/run_extraction.py --n 1                  # smoke test on one contract
     python scripts/run_extraction.py --n 20 --model claude-opus-5-5
+    python scripts/run_extraction.py --n 100 --exclude-sample 20  # 80 dev contracts not used for tuning
 """
 
 import argparse
@@ -35,11 +36,16 @@ def main() -> None:
     ap.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"], default="medium")
     ap.add_argument("--prompt", choices=sorted(PROMPTS), default="v1")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--exclude-sample", type=int, default=0, metavar="K",
+                    help="leave out the contracts a --n K run uses, e.g. the 20 used for prompt tuning")
     args = ap.parse_args()
 
-    contracts = sorted(load_cuad(split=args.split), key=lambda c: c.id)
+    pool = sorted(load_cuad(split=args.split), key=lambda c: c.id)
     # Same seed -> same contracts every run, so prompt/model versions are compared on identical inputs.
-    contracts = random.Random(0).sample(contracts, min(args.n, len(contracts)))
+    contracts = random.Random(0).sample(pool, min(args.n, len(pool)))
+    if args.exclude_sample:
+        tuning = {c.id for c in random.Random(0).sample(pool, args.exclude_sample)}
+        contracts = [c for c in contracts if c.id not in tuning]
     prompt = PROMPTS[args.prompt]
     client = anthropic.Anthropic()
 

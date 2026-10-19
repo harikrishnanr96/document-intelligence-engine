@@ -13,6 +13,7 @@ Turns a contract into validated JSON for 12 key clauses (parties, dates, governi
 | Keyword baseline (no LLM) | 30.5% | 28.4% | 29.4% | 80.8% | $0 |
 | Claude Haiku 5.5, prompt v1 (plain) | 59.0% | 45.6% | 51.4% | 92.5% | $0.003 |
 | Claude Haiku 5.5, prompt v2a (+ quoting rules) | 81.3% | 87.0% | 84.0% | 91.2% | $0.004 |
+| Claude Haiku 5.5, prompt v2b (+ field definitions with exclusions) | 85.3% | 88.1% | 86.7% | 96.2% | $0.004 |
 
 Run summaries are in [results/](results/). Final numbers will be reported once, on 95 held-out test contracts.
 
@@ -20,7 +21,7 @@ Run summaries are in [results/](results/). Final numbers will be reported once, 
 
 - **No OCR or vision model needed for these documents.** All 510 PDFs have a text layer, and plain text extraction preserved 99.9% (2,261 / 2,263) of the lawyer-labelled passages, at ~0.2 s and $0 per contract.
 - **Most first-prompt "errors" were labelling conventions, not misunderstanding.** Lawyers highlight only the name or date for parties and dates, but whole sentences for clauses. Teaching the model that rule raised F1 from 51.4% to 84.0% (Parties 25.9% → 92.7%).
-- **The remaining errors are neighbouring clause types.** All Non-Compete false alarms were non-solicitation or exclusivity clauses, which CUAD labels as separate categories.
+- **The remaining errors were neighbouring clause types.** All Non-Compete false alarms were non-solicitation or exclusivity clauses, which CUAD labels as separate categories. Naming those exclusions in the definition raised Non-Compete precision from 35% to 60% with recall unchanged, and cut false alarms overall from 17 to 8.
 - **Keywords can't interpret.** The baseline raised 152 false Non-Compete alarms and missed clauses like *"shall not run banner advertisements for any of 2TheMart's competitors"*. Telling those apart is the job the LLM has to earn its cost on.
 
 ## How it works

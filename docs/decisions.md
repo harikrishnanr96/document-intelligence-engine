@@ -52,6 +52,7 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 | keyword baseline | dev sample (20) | 30.5 | 28.4 | 29.4 | 80.8 | $0 |
 | Haiku 5.5, medium effort, prompt v1 | dev sample (20) | 59.0 | 45.6 | 51.4 | 92.5 | $0.003 / contract |
 | Haiku 5.5, medium effort, prompt v2a (+ quoting rules) | dev sample (20) | 81.3 | 87.0 | 84.0 | 91.2 | $0.004 / contract |
+| Haiku 5.5, medium effort, prompt v2b (+ field definitions) | dev sample (20) | 85.3 | 88.1 | 86.7 | 96.2 | $0.004 / contract |
 
 ## D8. Develop on Haiku 5.5, not Opus 5.5
 
@@ -72,6 +73,15 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 - F1 51.4 → 84.0. Biggest gains: Parties 25.9 → 92.7, Agreement Date 43.9 → 95.2, Document Name 87.8 → 97.6. Boundary errors fell from 44 to 7.
 - Most of v1's "errors" were therefore labelling-convention mismatches, not misunderstanding.
 - False alarms rose slightly (14 → 17), and Non-Compete precision is 35%. All 6 Non-Compete false alarms were neighbouring CUAD categories the model doesn't know are separate: No-Solicit of Customers, No-Solicit of Employees, Exclusivity. That is the target for v2b (definitions with explicit exclusions).
+
+## D12. Prompt v2b: definitions with explicit exclusions (ablation step 2)
+
+- One change from v2a: an "Includes / Does not include" line for 8 judgement-heavy fields. Non-Compete's exclusions name the neighbouring categories it confused in v2a (non-solicitation of customers and employees, exclusivity).
+- F1 84.0 → 86.7, false alarms 17 → 8, presence accuracy 91.2 → 96.2.
+- Non-Compete precision 35.3 → 60.0 with recall unchanged at 100: the exclusions did not make the model over-cautious.
+- Notice Period 85.7 → 100, Effective Date 66.7 → 75.0, Expiration Date 64.7 → 72.2.
+- Regression: Cap on Liability 72.7 → 68.1. The unmatched quotes are mostly carve-outs ("except for indemnification obligations…"), which CUAD labels as a separate category, Uncapped Liability. One case (Verizon) is arguably a cap the labellers didn't mark. Candidate fix: exclude carve-outs explicitly.
+- Overfitting risk: v1 → v2a → v2b were all judged on the same 20 contracts, and several fields have only 5–10 positive examples there. Next step is to confirm v2b on a larger dev sample before any further tuning.
 
 ## D10. Self-hosting: a focused comparison here, a deep dive as a separate project
 

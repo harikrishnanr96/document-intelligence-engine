@@ -12,3 +12,4 @@ Full per-contract outputs stay in `runs/`, which is not committed. Re-running th
 | [Keyword baseline, 415 dev contracts](20261014-125728-baseline-dev/summary.md) | `python scripts/run_baseline.py` | 25.7 |
 | [Haiku 5.5, prompt v1, 20 dev contracts](20261015-210154-claude-haiku-5-5-medium-v1-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v1` | 51.4 |
 | [Haiku 5.5, prompt v2a, 20 dev contracts](20261016-121534-claude-haiku-5-5-medium-v2a-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v2a` | 84.0 |
+| [Haiku 5.5, prompt v2b, 20 dev contracts](20261019-122341-claude-haiku-5-5-medium-v2b-dev20/summary.md) | `python scripts/run_extraction.py --n 20 --prompt v2b` | 86.7 |
