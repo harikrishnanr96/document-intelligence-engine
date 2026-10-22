@@ -11,7 +11,7 @@ Each decision with the evidence behind it. This log is the source for the README
 ## D2. Parser: PDF text layer, not OCR or multimodal
 
 - All 510 PDFs have a text layer.
-- On 80 random contracts, `pypdf` text extraction preserved **2,261 of 2,263 (99.9%)** gold passages verbatim, at ~0.2 s and $0 per contract.
+- On 80 random contracts, `pypdf` text extraction preserved **2,261 of 2,263 (99.9%)** gold passages verbatim, at ~0.2 s and $0 per contract. (Superseded by the full-corpus check in D14: 98.1% for our 12 fields.)
 - Rule: use the cheapest parser that keeps the evidence you need, and prove it against the labels. OCR or multimodal is only for documents without a usable text layer, and that is a separate, optional experiment on simulated scans.
 
 ## D3. Fields: 12 of the 41 categories
@@ -94,6 +94,15 @@ Failures are recorded, not raised, so the eval can report how often each layer f
 - Most common remaining error is `partial_hit` (153): on multi-passage fields the model finds some passages but not all.
 - Validation: 16/80 first attempts (20%) quoted text not in the contract (0/80 under v1; short exact quotes are easier to get slightly wrong). The retry fixed 15; 1 unsupported quote was dropped.
 - Decision: freeze v2b. Further tuning would need studying these 80 contracts' errors, which would use up another fresh check. The weak fields are documented as known limitations.
+
+## D14. Parse step: pypdf text layer + header/footer removal
+
+- `parse.py`: read each page's text layer; refuse PDFs averaging under 100 characters per page as scans (OCR is out of scope, and empty text would silently produce "nothing found"); remove lines that repeat in the top or bottom 3 lines of at least half the pages. Page numbers ("Page 3 of 9", "- 2 -") count as one repeated line; any other line must repeat exactly, so numbered headings like "ARTICLE 3" survive (a unit test caught an earlier version that would have deleted them).
+- Checked on all 510 CUAD PDFs (`scripts/check_parsing.py`, no API cost): 0 refused as scans; headers/footers removed in 327 of 505; 5 PDFs couldn't be matched to their label record by file name.
+- Strict check (every word of the passage, in order, ignoring case/spacing/punctuation): **98.1%** of the 7,032 lawyer passages for our 12 fields are found in the raw PDF text, **98.0%** after cleanup. The earlier 99.9% was a sample of 80 contracts across all 41 categories; the full-corpus number for our fields is the one to quote.
+- The ~2% misses are small text differences, not lost content: superscript ordinals split by the PDF ("1st" → "1 st"), passages that cross a page break, and quirks in CUAD's own text that the labels copy (e.g. "17t h day of February", a truncated "AGREEMENT, d"). In most misses every word is present. Scoring uses word overlap, which tolerates these, so the end-to-end impact should be smaller; the PDF-input extraction run will measure it.
+- Cleanup cost: 9 passages (0.1%) stopped matching, all of which had a header or footer inside them in CUAD's text.
+- Speed: ~0.9 s per PDF with pypdf 6.
 
 ## D10. Self-hosting: a focused comparison here, a deep dive as a separate project
 

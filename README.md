@@ -28,7 +28,7 @@ Both prompts score ~8 points lower on the 80 fresh contracts than on the 20 tuni
 
 ## Key findings so far
 
-- **No OCR or vision model needed for these documents.** All 510 PDFs have a text layer, and plain text extraction preserved 99.9% (2,261 / 2,263) of the lawyer-labelled passages, at ~0.2 s and $0 per contract.
+- **No OCR or vision model needed for these documents.** All 510 PDFs have a text layer. Plain text extraction keeps 98.1% of the 7,032 lawyer passages for our 12 fields word for word, at ~1 s and $0 per contract; the rest differ only in small details such as superscript ordinals split by the PDF ("1st" → "1 st").
 - **Most first-prompt "errors" were labelling conventions, not misunderstanding.** Lawyers highlight only the name or date for parties and dates, but whole sentences for clauses. Teaching the model that rule raised F1 from 51.4% to 84.0% (Parties 25.9% → 92.7%).
 - **The remaining errors were neighbouring clause types.** All Non-Compete false alarms were non-solicitation or exclusivity clauses, which CUAD labels as separate categories. Naming those exclusions in the definition raised Non-Compete precision from 35% to 60% with recall unchanged, and cut false alarms overall from 17 to 8.
 - **Keywords can't interpret.** The baseline raised 152 false Non-Compete alarms and missed clauses like *"shall not run banner advertisements for any of 2TheMart's competitors"*. Telling those apart is the job the LLM has to earn its cost on.
